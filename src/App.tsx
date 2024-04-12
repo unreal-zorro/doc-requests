@@ -1,11 +1,21 @@
+import { NavLink, Outlet } from 'react-router-dom';
 import './App.css';
-import { AuthPage, RequestPage } from './pages';
 
 function App() {
   return (
     <>
-      <AuthPage />
-      <RequestPage />
+      <nav>
+        <ul>
+          <li>
+            <NavLink to={''}>Страница авторизации</NavLink>
+          </li>
+          <li>
+            <NavLink to={'request'}>Страница заявок</NavLink>
+          </li>
+        </ul>
+      </nav>
+
+      <Outlet />
     </>
   );
 }

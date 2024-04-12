@@ -1,12 +1,22 @@
-import { RequestForm } from './modules/request-form';
-import { RequestTable } from './modules/request-table';
+import { NavLink, Outlet } from 'react-router-dom';
 
 export const RequestPage = () => {
   return (
     <>
       <h1>Страница заявок</h1>
-      <RequestForm />
-      <RequestTable />
+
+      <nav>
+        <ul>
+          <li>
+            <NavLink to={''}>Форма для отправки заявок</NavLink>
+          </li>
+          <li>
+            <NavLink to={'table'}>Таблица с информацией о заявках</NavLink>
+          </li>
+        </ul>
+      </nav>
+
+      <Outlet />
     </>
   );
 };
