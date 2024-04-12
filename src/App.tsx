@@ -1,11 +1,10 @@
 import './App.css';
-import AuthPage from './components/auth-page/auth-page';
-import RequestPage from './components/request-page/request-page';
+import { AuthPage, RequestPage } from './pages';
 
 function App() {
   return (
     <>
-      <AuthPage />;
+      <AuthPage />
       <RequestPage />
     </>
   );
