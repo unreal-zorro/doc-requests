@@ -14,5 +14,14 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
+    'no-undef': 'off'
   },
+  overrides: [
+    {
+      files: ['json-server/**/*.js'],
+      rules: {
+        '@typescript-eslint/no-var-requires': ['off']
+      }
+    }
+  ]
 }
