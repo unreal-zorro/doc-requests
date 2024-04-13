@@ -1,41 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
+import { Provider } from 'react-redux';
+import { RouterProvider } from 'react-router-dom';
 import './index.css';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { AuthPage, ErrorPage, RequestPage } from './pages';
-import { RequestForm, RequestTable } from './pages/request-page';
+import { createReduxStore, initialState } from './redux';
+import { router } from './router';
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <App />,
-    errorElement: <ErrorPage />,
-    children: [
-      {
-        path: '',
-        element: <AuthPage />
-      },
-      {
-        path: 'request',
-        element: <RequestPage />,
-        children: [
-          {
-            path: '',
-            element: <RequestForm />
-          },
-          {
-            path: 'table',
-            element: <RequestTable />
-          }
-        ]
-      }
-    ]
-  }
-]);
+const store = createReduxStore(initialState);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );
