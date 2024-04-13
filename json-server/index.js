@@ -33,7 +33,29 @@ server.post('/login', (req, res) => {
       return res.json(userFromBd);
     }
 
-    return res.status(403).json({ message: 'User not found' });
+    return res.status(403).json({ message: 'Пользователь не найден' });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ message: e.message });
+  }
+});
+
+// Эндпоинт для новой заявки
+server.post('/new-request', (req, res) => {
+  try {
+    const { userId, title } = req.body;
+    const db = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'db.json'), 'utf-8'));
+    const { requests = [] } = db;
+
+    const requestsFromBd = requests.find(
+      (request) => request.title === title && request.userId === userId
+    );
+
+    if (requestsFromBd) {
+      return res
+        .status(403)
+        .json({ message: 'Вы уже отправляли заявку на этот документ, она уже была учтена' });
+    }
   } catch (e) {
     console.log(e);
     return res.status(500).json({ message: e.message });
