@@ -13,7 +13,7 @@ server.use(jsonServer.bodyParser);
 // Небольшая задержка для имитации реального api
 server.use(async (req, resolve, next) => {
   await new Promise((resolve) => {
-    setTimeout(resolve, 1000);
+    setTimeout(resolve, 300);
   });
   next();
 });
@@ -40,8 +40,8 @@ server.post('/login', (req, res) => {
   }
 });
 
-// Эндпоинт для новой заявки
-server.post('/new-request', (req, res) => {
+// Проверка создания новой заявки
+server.use((req, res, next) => {
   try {
     const { userId, title } = req.body;
     const db = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'db.json'), 'utf-8'));
@@ -56,6 +56,8 @@ server.post('/new-request', (req, res) => {
         .status(403)
         .json({ message: 'Вы уже отправляли заявку на этот документ, она уже была учтена' });
     }
+
+    next();
   } catch (e) {
     console.log(e);
     return res.status(500).json({ message: e.message });
