@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { NewRequestData, RequestUserData, User } from '@/types';
+import { Loader } from '@/components';
 
 export const RequestForm = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -10,6 +11,7 @@ export const RequestForm = () => {
   });
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const getUsers: () => Promise<void> = async () => {
     try {
@@ -63,8 +65,9 @@ export const RequestForm = () => {
     event
   ) => {
     event.preventDefault();
-
+    setIsLoading(true);
     await onRequest(requestData);
+    setIsLoading(false);
   };
 
   const onRequest: (requestData: NewRequestData) => Promise<void> = async (requestData) => {
@@ -72,13 +75,9 @@ export const RequestForm = () => {
       const token = '123';
       const headers = { Authorization: `Bearer ${token}` };
 
-      const response = await axios.post<RequestUserData[]>(
-        'http://localhost:8000/new-request',
-        requestData,
-        {
-          headers
-        }
-      );
+      await axios.post<RequestUserData[]>('http://localhost:8000/requests', requestData, {
+        headers
+      });
 
       setSuccess('Заявка успешно отправлена');
     } catch (error: unknown) {
@@ -89,52 +88,59 @@ export const RequestForm = () => {
   };
 
   useEffect(() => {
-    (async () => await getUsers())();
+    (async () => {
+      setIsLoading(true);
+      await getUsers();
+      setIsLoading(false);
+    })();
   }, []);
 
   return (
     <>
-      <h2>Форма для отправки заявок</h2>
+      <h2>Форма для заявки</h2>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <form>
+          <label htmlFor="user">ФИО конструктора</label>
+          <select
+            id="user"
+            name="user"
+            onFocus={onFocusHandler}
+            onChange={(event: React.ChangeEvent<HTMLSelectElement>) => onChangeUserHandler(event)}
+          >
+            <option hidden> ФИО </option>
+            {users.map((user: User) => {
+              return (
+                <option key={user.id} value={user.id}>
+                  {user.username}
+                </option>
+              );
+            })}
+          </select>
 
-      <form>
-        <label htmlFor="user">ФИО конструктора</label>
-        <select
-          id="user"
-          name="user"
-          onFocus={onFocusHandler}
-          onChange={(event: React.ChangeEvent<HTMLSelectElement>) => onChangeUserHandler(event)}
-        >
-          <option hidden> ФИО </option>
-          {users.map((user: User) => {
-            return (
-              <option key={user.id} value={user.id}>
-                {user.username}
-              </option>
-            );
-          })}
-        </select>
+          <label htmlFor="document">Наименование документа</label>
+          <input
+            id="document"
+            type="text"
+            name="document"
+            placeholder="Документ"
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => onChangeTitleHandler(event)}
+            onFocus={onFocusHandler}
+          />
 
-        <label htmlFor="document">Наименование документа</label>
-        <input
-          id="document"
-          type="text"
-          name="document"
-          placeholder="Документ"
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) => onChangeTitleHandler(event)}
-          onFocus={onFocusHandler}
-        />
+          <p>{error}</p>
+          <p>{success}</p>
 
-        <p>{error}</p>
-        <p>{success}</p>
-
-        <button
-          type="submit"
-          onClick={(event: React.MouseEvent<HTMLButtonElement>) => requestClickHandler(event)}
-          disabled={isDisabled(requestData)}
-        >
-          Отправить заявку
-        </button>
-      </form>
+          <button
+            type="submit"
+            onClick={(event: React.MouseEvent<HTMLButtonElement>) => requestClickHandler(event)}
+            disabled={isDisabled(requestData)}
+          >
+            Отправить заявку
+          </button>
+        </form>
+      )}
     </>
   );
 };

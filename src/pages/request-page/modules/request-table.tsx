@@ -1,15 +1,20 @@
 import { useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { RequestCount, RequestData } from '@/types';
+import { Loader } from '@/components';
 
 export const RequestTable = () => {
   const [result, setResult] = useState<RequestCount[]>([]);
   const [error, setError] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const getTableData: () => Promise<void> = async () => {
     try {
       const token = '123';
-      const headers = { Authorization: `Bearer ${token}` };
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      };
 
       const response = await axios.get<RequestData[]>('http://localhost:8000/requests', {
         headers
@@ -46,32 +51,41 @@ export const RequestTable = () => {
   };
 
   useEffect(() => {
-    (async () => await getTableData())();
+    (async () => {
+      setIsLoading(true);
+      await getTableData();
+      setIsLoading(false);
+    })();
   }, []);
 
   return (
     <>
-      <h2>Таблица с информацией о заявках</h2>
+      <h2>Сводная таблица</h2>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Наименование документа</th>
-            <th>Количество заявок</th>
-          </tr>
-        </thead>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <>
+          <table>
+            <thead>
+              <tr>
+                <th>Наименование документа</th>
+                <th>Количество заявок</th>
+              </tr>
+            </thead>
 
-        <tbody>
-          {result.map((item: RequestCount) => (
-            <tr key={item.id}>
-              <td>{item.title}</td>
-              <td>{item.count}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <p>{error}</p>
+            <tbody>
+              {result.map((item: RequestCount) => (
+                <tr key={item.id}>
+                  <td>{item.title}</td>
+                  <td>{item.count}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p>{error}</p>
+        </>
+      )}
     </>
   );
 };

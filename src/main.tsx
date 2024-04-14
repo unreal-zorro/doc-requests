@@ -2,9 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { RouterProvider } from 'react-router-dom';
-import './index.css';
 import { createReduxStore, initialState } from './redux';
 import { router } from './router';
+import './index.css';
 
 const store = createReduxStore(initialState);
 

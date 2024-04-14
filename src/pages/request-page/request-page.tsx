@@ -8,10 +8,10 @@ export const RequestPage = () => {
       <nav>
         <ul>
           <li>
-            <NavLink to={''}>Форма для отправки заявок</NavLink>
+            <NavLink to={''}>Форма для заявки</NavLink>
           </li>
           <li>
-            <NavLink to={'table'}>Таблица с информацией о заявках</NavLink>
+            <NavLink to={'table'}>Сводная таблица</NavLink>
           </li>
         </ul>
       </nav>
