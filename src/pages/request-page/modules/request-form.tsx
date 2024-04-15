@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { NewRequestData, RequestUserData, User } from '@/types';
 import { Loader } from '@/components';
+import { baseUrl } from '@/consts';
 
 export const RequestForm = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -18,7 +19,7 @@ export const RequestForm = () => {
       const token = '123';
       const headers = { Authorization: `Bearer ${token}` };
 
-      const response = await axios.get<RequestUserData[]>('http://localhost:8000/users', {
+      const response = await axios.get<RequestUserData[]>(`${baseUrl}/users`, {
         headers
       });
 
@@ -75,7 +76,7 @@ export const RequestForm = () => {
       const token = '123';
       const headers = { Authorization: `Bearer ${token}` };
 
-      await axios.post<RequestUserData[]>('http://localhost:8000/requests', requestData, {
+      await axios.post<RequestUserData[]>(`${baseUrl}/requests`, requestData, {
         headers
       });
 

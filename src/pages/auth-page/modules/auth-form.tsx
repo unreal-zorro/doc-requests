@@ -5,6 +5,7 @@ import axios, { AxiosError } from 'axios';
 import type { AuthData, User } from '@/types';
 import { setUser } from '@/redux';
 import { Loader } from '@/components';
+import { baseUrl } from '@/consts';
 
 export const AuthForm = () => {
   const [authData, setAuthData] = useState<AuthData>({
@@ -48,7 +49,7 @@ export const AuthForm = () => {
 
   const onLogin: (authData: AuthData) => Promise<void> = async (authData) => {
     try {
-      const response = await axios.post<User>('http://localhost:8000/login', authData);
+      const response = await axios.post<User>(`${baseUrl}/login`, authData);
 
       if (!response.data) {
         throw new Error('No response');

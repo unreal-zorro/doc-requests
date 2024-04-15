@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { RequestCount, RequestData } from '@/types';
 import { Loader } from '@/components';
+import { baseUrl } from '@/consts';
 
 export const RequestTable = () => {
   const [result, setResult] = useState<RequestCount[]>([]);
@@ -16,7 +17,7 @@ export const RequestTable = () => {
         'Content-Type': 'application/json'
       };
 
-      const response = await axios.get<RequestData[]>('http://localhost:8000/requests', {
+      const response = await axios.get<RequestData[]>(`${baseUrl}/requests`, {
         headers
       });
 
